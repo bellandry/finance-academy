@@ -19,7 +19,6 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
-
         <body className={inter.className}>
           <RootProvider>
             {children}

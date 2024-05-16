@@ -31,7 +31,7 @@ const DesktopNavbar = () => {
   return (
     <div className='hidden md:block border-separate border-b bg-background'>
       <nav className="container flex items-center justify-between px-8">
-        <div className='flex h-[80px] min-h-[60px] items-center gap-x-4'>
+        <div className='flex h-[70px] min-h-[60px] items-center gap-x-4'>
           <Logo />
           <div className="flex h-full">
             {items.map(item => (
@@ -56,15 +56,15 @@ const MobileNavbar = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className="block border-separate bg-backgound md:hidden">
-      <nav className="container flex items-center justify-between px-8">
+    <div className="block border-separate bg-backgound border-b md:hidden">
+      <nav className="container flex items-center justify-between px-4">
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger>
-            <Button variant='ghost' size='icon'>
+            <Button variant="ghost" size='icon'>
               <Menu />
             </Button>
           </SheetTrigger>
-          <SheetContent className="w-[400px] sm:w-[540px]" side='left'>
+          <SheetContent className="w-[400px] sm:w-[540px]" side="left">
             <Logo />
             <div className='flex flex-col gap-2 pt-4'>
               {items.map((item) => (
@@ -78,7 +78,7 @@ const MobileNavbar = () => {
             </div>
           </SheetContent>
         </Sheet>
-        <div className="flex h-[80px] min-h-[60px] items-center gap-x-4">
+        <div className="flex h-[70px] min-h-[60px] items-center gap-x-4">
           <LogoMobile />
         </div>
         <div className="flex items-center gap-2">
@@ -93,8 +93,6 @@ const MobileNavbar = () => {
 const NavbarItem = ({ link, label, clickCallback }: { link: string, label: string, clickCallback?: () => void }) => {
   const pathName = usePathname()
   const isActive = pathName === link
-
-
 
   return (
     <div className="relative flex items-center">
