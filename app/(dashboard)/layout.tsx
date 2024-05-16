@@ -1,10 +1,14 @@
+import Navbar from '@/components/navbar'
 import React from 'react'
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-      <main className= "pt-[70px] h-full md:pl-64" >
+    <main className="relative flex h-screen w-full flex-col" >
+      <Navbar />
+      <div className="w-full">
         {children}
-      </main>
+      </div>
+    </main>
   )
 }
 

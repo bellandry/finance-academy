@@ -12,7 +12,7 @@ const AuthLayout = (
     <div className="h-screen flex items-center justify-center py-4">
       <div className="w-full h-screen md:w-1/2 md:block fixed top-0 bottom-0 left-0">
         <Image
-          layout="fill" objectFit="cover"
+          fill objectFit="cover"
           alt="login & signin image"
           src="https://images.unsplash.com/photo-1633158829556-6ea20ad39b4f?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         />
