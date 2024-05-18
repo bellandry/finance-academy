@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import Logo, { LogoMobile } from './logo'
-import { ThemeSwitcherBtn } from './theme-swuitcher-btn'
+import { ThemeSwitcherBtn } from './theme-switcher-btn'
 import { Button, buttonVariants } from './ui/button'
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
 

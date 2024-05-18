@@ -41,7 +41,7 @@ const Wizard = async() => {
       </Card>
       <Separator />
       <Button className='w-full' asChild>
-        <Link href={"/"}>C&apos;est fait, aller au dashboard</Link>
+        <Link href={"/dashboard"}>C&apos;est fait, aller au dashboard</Link>
       </Button>
       <div className="mt-8">
         <Logo />
