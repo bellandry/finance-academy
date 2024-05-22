@@ -14,6 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Category } from '@prisma/client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CircleOff, Loader2, PlusSquare } from 'lucide-react'
+import { useTheme } from 'next-themes'
 import { useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -21,9 +22,10 @@ import { CreateCategory } from '../_actions/categories'
 
 interface CreateCategoryDialogProps {
   type: TransactionType
+  successCallback: (Category: Category) => void
 }
 
-function CreateCategoryDialog({ type }: CreateCategoryDialogProps) {
+function CreateCategoryDialog({ type, successCallback }: CreateCategoryDialogProps) {
   const [open, setOpen] = useState(false)
   const form = useForm<CreateCategorySchemaType>({
     resolver: zodResolver(CreateCategorySchema),
@@ -33,6 +35,7 @@ function CreateCategoryDialog({ type }: CreateCategoryDialogProps) {
   })
 
   const queryClient = useQueryClient()
+  const theme = useTheme()
 
   const { mutate, isPending } = useMutation({
     mutationFn: CreateCategory,
@@ -46,6 +49,8 @@ function CreateCategoryDialog({ type }: CreateCategoryDialogProps) {
       toast.success(`Catégorie ${data.name} créee avec succès`, {
         id: "create-category"
       })
+
+      successCallback(data)
 
       await queryClient.invalidateQueries({
         queryKey: ['categories']
@@ -105,10 +110,10 @@ function CreateCategoryDialog({ type }: CreateCategoryDialogProps) {
                 <FormItem>
                   <FormLabel>Nom</FormLabel>
                   <FormControl>
-                    <Input defaultValue={""} {...field} />
+                    <Input placeholder='Catégorie' {...field} />
                   </FormControl>
                   <FormDescription>
-                    Nom de la catégories
+                    Nom de la catégorie
                   </FormDescription>
                 </FormItem>
               )}
@@ -148,6 +153,7 @@ function CreateCategoryDialog({ type }: CreateCategoryDialogProps) {
                       <PopoverContent className="w-full">
                         <Picker
                           data={data}
+                          theme={theme.resolvedTheme}
                           onEmojiSelect={(emoji: { native: string }) => {
                             field.onChange(emoji.native)
                           }}
@@ -165,16 +171,16 @@ function CreateCategoryDialog({ type }: CreateCategoryDialogProps) {
         </Form>
         <DialogFooter>
           <DialogClose asChild>
+            <Button
+              type='button'
+              variant={'secondary'}
+              onClick={() => {
+                form.reset()
+              }}
+            >
+              Annuler
+            </Button>
           </DialogClose>
-          <Button
-            type='button'
-            variant={'secondary'}
-            onClick={() => {
-              form.reset()
-            }}
-          >
-            Annuler
-          </Button>
           <Button onClick={form.handleSubmit(onSubmit)} disabled={isPending}>
             {!isPending ? "Créer" : (
               <Loader2 className='animate-spin' />
