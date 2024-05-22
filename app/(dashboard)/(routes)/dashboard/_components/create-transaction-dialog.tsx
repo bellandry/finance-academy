@@ -3,30 +3,29 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { TransactionType } from "@/lib/types"
 import { cn } from "@/lib/utils"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { ReactNode } from "react"
 import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
 
 interface CreateTransactionDialogProps {
   trigger: ReactNode
   type: TransactionType
 }
 
-import React from 'react'
-import { CreateTransactionSchema, CreateTransactionSchemaType } from "@/schema/transaction"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { CreateTransactionSchema, CreateTransactionSchemaType } from "@/schema/transaction"
 import CategoryPicker from "./category-picker"
 
-function CreateTransactionDialog({ trigger, type}: CreateTransactionDialogProps) {
-  const form =  useForm<CreateTransactionSchemaType>({
+function CreateTransactionDialog({ trigger, type }: CreateTransactionDialogProps) {
+  const form = useForm<CreateTransactionSchemaType>({
     resolver: zodResolver(CreateTransactionSchema),
     defaultValues: {
       type,
       date: new Date()
     }
   })
-  
+
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -34,11 +33,11 @@ function CreateTransactionDialog({ trigger, type}: CreateTransactionDialogProps)
         <DialogHeader>
           <DialogTitle>
             <p>
-              Ajouter une nouvelle 
+              Ajouter une nouvelle
               <span className={cn(
                 "m-1",
                 type === 'income' ? 'text-emerald-500' : 'text-rose-500'
-                )}>
+              )}>
                 {type === 'income' ? "entrée" : 'dépense'}
               </span>
             </p>
@@ -78,21 +77,21 @@ function CreateTransactionDialog({ trigger, type}: CreateTransactionDialogProps)
             />
 
             <div className="flex items-center gap-2 justify-between">
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Catégorie</FormLabel>
-                  <FormControl>
-                    <CategoryPicker type={type} />
-                  </FormControl>
-                  <FormDescription>
-                    Description de la transaction ( optionnel )
-                  </FormDescription>
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Catégorie</FormLabel>
+                    <FormControl>
+                      <CategoryPicker type={type} />
+                    </FormControl>
+                    <FormDescription>
+                      Sélectionnez une catégorie pour cette transaction ( optionnel )
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
             </div>
           </form>
         </Form>

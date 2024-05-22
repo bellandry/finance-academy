@@ -1,12 +1,13 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Command, CommandInput } from '@/components/ui/command'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { TransactionType } from '@/lib/types'
 import { Category } from '@prisma/client'
 import { useQuery } from '@tanstack/react-query'
-import React, { useState } from 'react'
+import { useState } from 'react'
+import CreateCategoryDialog from './create-category-dialog'
 
 interface CategoryPickerProps {
   type: TransactionType
@@ -18,7 +19,7 @@ function CategoryPicker({ type }: CategoryPickerProps) {
 
   const categoriesQuery = useQuery({
     queryKey: ['categories', type],
-    queryFn: () => fetch(`/api/categories?type=${type}`).then((res) => 
+    queryFn: () => fetch(`/api/categories?type=${type}`).then(res =>
       res.json()
     )
   })
@@ -34,24 +35,44 @@ function CategoryPicker({ type }: CategoryPickerProps) {
           variant={"outline"}
           role={'combobox'}
           aria-expanded={open}
-          className='ml-4 w-[300px] justify-between'
+          className='ml-4 w-[200px] justify-between'
         >
           {selectedCategory ? (
             <CategoryRow category={selectedCategory} />
           ) : (
-            "Sélectionnez une catégories"
+            "Choisissez en une"
           )}
 
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-[300px] p-0'>
-         <Command
+      <PopoverContent className='w-[200px] p-0'>
+        <Command
           onSubmit={(e) => {
             e.preventDefault()
           }}
-         >
-          <CommandInput placeholder='Rechercher une catégorie' />
-         </Command>
+        >
+          <CommandInput placeholder='Chercher une catégorie...' />
+          <CreateCategoryDialog type={type} />
+          <CommandEmpty>
+            <p>Catégorie non trouvée</p>
+            <p className="text-xs text-muted-foreground">Créer une catégorie</p>
+          </CommandEmpty>
+          <CommandGroup>
+            <CommandList>
+              {categoriesQuery.data && categoriesQuery.data.map((category: Category) => (
+                <CommandItem
+                  key={category.name}
+                  onSelect={(currentValue) => {
+                    setValue(currentValue)
+                    setOpen((prev) => !prev)
+                  }}
+                >
+                  <CategoryRow category={category} />
+                </CommandItem>
+              ))}
+            </CommandList>
+          </CommandGroup>
+        </Command>
       </PopoverContent>
     </Popover>
   )
@@ -59,7 +80,7 @@ function CategoryPicker({ type }: CategoryPickerProps) {
 
 export default CategoryPicker
 
-function CategoryRow({category}: {category: Category}) {
+function CategoryRow({ category }: { category: Category }) {
   return (
     <div className="flex items-center gap-2">
       <span role='img'>{category.icon}</span>
