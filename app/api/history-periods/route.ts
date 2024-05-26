@@ -8,8 +8,6 @@ export async function GET(request: Request) {
     redirect('/sign-in')
   }
 
-
-
   const periods = await getHistoryPeriods(user.id)
   return Response.json(periods)
 }
