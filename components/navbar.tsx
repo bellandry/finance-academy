@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils'
 import { UserButton } from '@clerk/nextjs'
-import { Menu } from 'lucide-react'
+import { LogInIcon, LogOut, Menu } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
@@ -18,32 +18,78 @@ const items = [
   { label: 'Gérer', link: '/manage' }
 ]
 
-const Navbar = () => {
+const Navbar = ({ userId }: { userId: string | null }) => {
+  const pathName = usePathname()
+  const isHomePage = pathName === "/" || pathName === "/home"
+
   return (
     <>
-      <DesktopNavbar />
-      <MobileNavbar />
+      <DesktopNavbar isHomePage={isHomePage} userId={userId} />
+      <MobileNavbar isHomePage={isHomePage} userId={userId} />
     </>
   )
 }
 
-const DesktopNavbar = () => {
+const DesktopNavbar = ({ isHomePage, userId }: { isHomePage: boolean, userId: string | null }) => {
   return (
     <div className='hidden md:block border-separate border-b bg-background'>
       <nav className="container flex items-center justify-between px-8">
         <div className='flex h-[70px] min-h-[60px] items-center gap-x-4'>
           <Logo />
           <div className="flex h-full">
-            {items.map(item => (
-              <NavbarItem
-                key={item.label}
-                link={item.link}
-                label={item.label}
-              />
+            {!isHomePage && items.map(item => (
+              item.label != "Accueil" && (
+                <NavbarItem
+                  key={item.label}
+                  link={item.link}
+                  label={item.label}
+                />
+              )
             ))}
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {isHomePage ? (
+            userId ? (
+              <Link
+                href="/dashboard"
+                className={cn(
+                  buttonVariants({
+                    variant: 'ghost',
+                    size: 'sm'
+                  }),
+                  "w-full justify-start text-lg hover:text-foreground"
+                )}
+              >
+                <LogInIcon className='w-4 h-4 mr-2' />
+                Dashboard
+              </Link>
+            ) : (
+              <Link
+                href="/sign-in"
+                className={cn(
+                  buttonVariants({ variant: "default", size: "lg" }),
+                  "flex gap-2 items-center mr-2"
+                )}
+              >
+                Se connecter
+              </Link>
+            )
+          ) : (
+            <Link
+              href="/"
+              className={cn(
+                buttonVariants({
+                  variant: 'ghost',
+                  size: 'sm'
+                }),
+                "w-full justify-start text-lg hover:text-foreground"
+              )}
+            >
+              <LogOut className='w-4 h-4 mr-2' />
+              Accueil
+            </Link>
+          )}
           <ThemeSwitcherBtn />
           <UserButton afterSignOutUrl='/' />
         </div>
@@ -52,15 +98,15 @@ const DesktopNavbar = () => {
   )
 }
 
-const MobileNavbar = () => {
+const MobileNavbar = ({ isHomePage, userId }: { isHomePage: boolean, userId: string | null }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
     <div className="block border-separate bg-backgound border-b md:hidden">
       <nav className="container flex items-center justify-between px-4">
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger>
-            <Button variant="ghost" size='icon'>
+          <SheetTrigger asChild>
+            <Button variant={"ghost"} size={"icon"}>
               <Menu />
             </Button>
           </SheetTrigger>
@@ -96,12 +142,14 @@ const NavbarItem = ({ link, label, clickCallback }: { link: string, label: strin
 
   return (
     <div className="relative flex items-center">
-      <Link href={link} className={cn(
-        buttonVariants({
-          variant: 'ghost'
-        }),
-        "w-full justify-start text-lg text-muted-foreground hover:text-foreground",
-        isActive && "text-foreground")}
+      <Link
+        href={link}
+        className={cn(
+          buttonVariants({
+            variant: 'ghost'
+          }),
+          "w-full justify-start text-lg text-muted-foreground hover:text-foreground",
+          isActive && "text-foreground")}
         onClick={() => {
           if (clickCallback) clickCallback();
         }}

@@ -1,10 +1,10 @@
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { TransactionType } from '@/lib/types'
 import { Category } from '@prisma/client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { toast } from 'sonner'
-import { DeleteCategory } from '../../dashboard/_actions/categories'
-import { TransactionType } from '@/lib/types'
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { DeleteCategory } from '../actions/delete-category'
 
 interface DeleteCategoryDialogProps {
   trigger: ReactNode
